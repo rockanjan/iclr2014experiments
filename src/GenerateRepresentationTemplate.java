@@ -26,7 +26,7 @@ public class GenerateRepresentationTemplate {
 	
 	//extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws FileNotFoundException {
-		int REP_LENGTH = 7;
+		int REP_LENGTH = 1;
 		String templateFile = "/data/onco_pos/smaller/representation.template";
 		StringBuffer content = new StringBuffer();
 		int featureIndex = 0;
@@ -42,10 +42,9 @@ public class GenerateRepresentationTemplate {
 				featureIndex++;
 			}
 		}
-		/*** representation features starts ***/
-		//Add representations
+		
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
-			for(int i=-2; i<=2; i++) {
+			for(int i=0; i<0; i++) {
 				content.append(String.format("U%d:%%x[%d,%d]\n", featureIndex, i, (13+d)));
 				featureIndex++;
 			}
@@ -54,8 +53,11 @@ public class GenerateRepresentationTemplate {
 		int bigramFeatureIndex = 0;
 		content.append(String.format("B%d\n", bigramFeatureIndex));
 		bigramFeatureIndex++;
+		
+		/*
 		//my: bigram + word
 		content.append(String.format("B%d:%%x[0,1]\n", bigramFeatureIndex));
+		*/
 		System.out.println(content.toString());
 		PrintWriter pw = new PrintWriter(templateFile);
 		pw.println(content.toString());

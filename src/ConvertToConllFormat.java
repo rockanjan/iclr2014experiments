@@ -11,10 +11,10 @@ public class ConvertToConllFormat {
 	//to extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws IOException {
 		Vocabulary v = new Vocabulary();
-		v.readDictionary("/data/onco_pos/all/vocab.txt.thres2");
+		v.readDictionary("/data/onco_pos/smaller/vocab.txt");
 		
-		//String filename = "/data/onco_pos/all/onco_test.561";
-		String filename = "/data/onco_pos/all/train.40k";
+		String filename = "/data/onco_pos/smaller/onco_test.561";
+		//String filename = "/data/onco_pos/smaller/wsj_ul.5k";
 		String outFilename = filename + ".conll";
 		
 		PrintWriter pw = new PrintWriter(outFilename);

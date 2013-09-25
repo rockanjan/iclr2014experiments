@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -6,23 +7,30 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+/*
+ * zero index always reserved for OOV no matter if it appears or not
+ * if it does not appear, the index will not be used
+ */
+
 public class Vocabulary {
 	boolean debug = true;
 	boolean smooth = true;
 	boolean lower = true;
-	public int vocabThreshold = 0;
+	public int vocabThreshold = 1;
 	//index zero reserved for *unk* (low freq features)
 	public int vocabReadIndex = 0;
-	public int vocabSize = -1;
+	public int vocabSize = 0;
 	public static String UNKNOWN = "*unk*";
 	public Map<String, Integer> wordToIndex = new HashMap<String, Integer>();
 	public ArrayList<String> indexToWord = new ArrayList<String>();
 	public Map<Integer, Integer> indexToFrequency = new HashMap<Integer, Integer>();
 	
 	public static void main(String[] args) throws IOException {
+		boolean WPL = false; //word per line or sentence per line?
 		//read token per line
-		String folder = "/data/onco_pos/all/";
-		BufferedReader br = new BufferedReader(new FileReader(folder + "train.40k.conll"));
+		String folder = "/data/onco_pos/smaller/";
+		BufferedReader br = new BufferedReader(new FileReader(folder + "pos_ul.all.notag"));
 		String line = "";
 		Vocabulary v = new Vocabulary();
 		v.vocabReadIndex = 1;
@@ -31,15 +39,26 @@ public class Vocabulary {
 		v.wordToIndex.put(v.UNKNOWN, 0);
 		while( (line = br.readLine()) != null) {
 			if(! line.trim().isEmpty()) {
-				String word = line.split("\\s+")[0].toLowerCase();
-				word = TokenProcessor.getSmoothedWord(word);
-				v.addItem(word);
+				if(WPL) {
+					String word = line.split("\\s+")[0].toLowerCase();
+					word = TokenProcessor.getSmoothedWord(word);
+					v.addItem(word);
+				} else {
+					String[] words = line.split("\\s+");
+					for(String word : words) {
+						word = word.toLowerCase();
+						word = TokenProcessor.getSmoothedWord(word);
+						v.addItem(word);
+					}
+				}
+				
 			}
 		}
 		System.out.println("Vocab size before reduction : " + v.vocabSize);
 		v.reduceVocab();
 		System.out.println("Vocab size after reduction : " + v.vocabSize);
-		v.writeDictionary(folder + "vocab.txt");
+		v.writeDictionary(folder + "vocab.txt.thres" + v.vocabThreshold);
+		br.close();
 	}
 	
 	public int addItem(String word) {

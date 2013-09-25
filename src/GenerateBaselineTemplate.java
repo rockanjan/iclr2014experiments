@@ -23,7 +23,7 @@ public class GenerateBaselineTemplate {
 	
 	//extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws FileNotFoundException {
-		String templateFile = "/data/onco_pos/all/baseline.template";
+		String templateFile = "/data/onco_pos/smaller/baseline.template";
 		StringBuffer content = new StringBuffer();
 		int featureIndex = 0;
 		//smoothed word upto hasHyphen
