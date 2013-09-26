@@ -8,11 +8,11 @@ public class EvaluateAccuracy {
 	public static void main(String[] args) throws IOException {
 		Vocabulary v = new Vocabulary();
 		v.debug = false;
-		v.readDictionary("/data/onco_pos/all/vocab.txt.thres0");
+		v.readDictionary("/data/onco_pos/smaller/vocab.txt.thres0");
 		
 		boolean smooth = false; //smooth before checking the vocab
 		boolean includeNum = true; //this does not matter if smooth=false
-		String filename = "/home/anjan/src/sgd/crf/test.c5";
+		String filename = "/home/anjan/src/sgd/crf/onco_test.561.conll.clean.rep.gold.pred.c2";
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		String line;
 		int total = 0;

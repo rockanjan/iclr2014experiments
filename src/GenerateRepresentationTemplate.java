@@ -44,11 +44,12 @@ public class GenerateRepresentationTemplate {
 		}
 		
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
-			for(int i=0; i<0; i++) {
+			for(int i=-1; i<=1; i++) {
 				content.append(String.format("U%d:%%x[%d,%d]\n", featureIndex, i, (13+d)));
 				featureIndex++;
 			}
 		}
+		
 		//bigram
 		int bigramFeatureIndex = 0;
 		content.append(String.format("B%d\n", bigramFeatureIndex));

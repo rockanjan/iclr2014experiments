@@ -17,7 +17,7 @@ public class Vocabulary {
 	boolean debug = true;
 	boolean smooth = true;
 	boolean lower = true;
-	public int vocabThreshold = 1;
+	public int vocabThreshold = 0;
 	//index zero reserved for *unk* (low freq features)
 	public int vocabReadIndex = 0;
 	public int vocabSize = 0;
@@ -30,7 +30,7 @@ public class Vocabulary {
 		boolean WPL = false; //word per line or sentence per line?
 		//read token per line
 		String folder = "/data/onco_pos/smaller/";
-		BufferedReader br = new BufferedReader(new FileReader(folder + "pos_ul.all.notag"));
+		BufferedReader br = new BufferedReader(new FileReader(folder + "wsj_ul.5k.notag"));
 		String line = "";
 		Vocabulary v = new Vocabulary();
 		v.vocabReadIndex = 1;

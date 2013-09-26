@@ -11,7 +11,7 @@ public class ConvertToConllFormat {
 	//to extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws IOException {
 		Vocabulary v = new Vocabulary();
-		v.readDictionary("/data/onco_pos/smaller/vocab.txt");
+		v.readDictionary("/data/onco_pos/smaller/vocab.txt.thres1");
 		
 		String filename = "/data/onco_pos/smaller/onco_test.561";
 		//String filename = "/data/onco_pos/smaller/wsj_ul.5k";
@@ -88,7 +88,7 @@ public class ConvertToConllFormat {
 				}
 				//write
 				pw.println(word + spaces(15 - word.length()) + 
-						smoothedWord + spaces(15 - smoothedWord.length()) +
+						smoothedWord.toLowerCase() + spaces(15 - smoothedWord.length()) +
 						prefix[0] + spaces(5-prefix[0].length()) +
 						prefix[1] + spaces(5-prefix[1].length()) +
 						prefix[2] + spaces(5-prefix[2].length()) +
