@@ -27,8 +27,8 @@ public class GenerateRepresentationTemplate {
 	
 	//extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws FileNotFoundException {
-		int REP_LENGTH = 1;
-		String templateFile = "/data/onco_pos/clean/all/representation.template";
+		int REP_LENGTH = 7;
+		String templateFile = "/data/onco_pos/clean/smaller/representation.template";
 		StringBuffer content = new StringBuffer();
 		int featureIndex = 0;
 		//smoothed word upto hasHyphen
@@ -45,11 +45,23 @@ public class GenerateRepresentationTemplate {
 		}
 		
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
-			for(int i=-1; i<=1; i++) {
-				content.append(String.format("U%d:%%x[%d,%d]\n", featureIndex, i, (13+d)));
+			for(int i=0; i<=0; i++) {
+				content.append(String.format("U%d:%%x[%d,%d]/%%x[%d,%d]\n", featureIndex, i, (13+d), i-1, (13+d)));
+				featureIndex++;
+				content.append(String.format("U%d:%%x[%d,%d]/%%x[%d,%d]\n", featureIndex, i, (13+d), i+1, (13+d)));
 				featureIndex++;
 			}
 		}
+		
+		/*
+		//my : combine representation with suffixes
+		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
+			for(int i=0; i<4; i++) {
+				content.append(String.format("U%d:%%x[%d,%d]/%%x[%d,%d]\n", featureIndex, 0, (13+d), 0, (6+i)));
+				featureIndex++;
+			}
+		}
+		*/
 		
 		//bigram
 		int bigramFeatureIndex = 0;

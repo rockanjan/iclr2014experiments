@@ -9,12 +9,13 @@ public class EvaluateAccuracy {
 	public static void main(String[] args) throws IOException {
 		Vocabulary v = new Vocabulary();
 		v.debug = false;
-		v.readDictionary("/data/onco_pos/clean/all/vocab.txt.thres0");
+		v.readDictionary("/data/onco_pos/clean/smaller/vocab.txt.thres0");
 		
 		boolean smooth = false; //smooth before checking the vocab
 		boolean includeNum = true; //this does not matter if smooth=false
 		//String filename = "/home/anjan/src/sgd/crf/onco_test.561.conll.clean.rep.gold.pred.c2";
-		String filename = "/home/anjan/src/sgd/crf/result/test.all.c2.brown";
+		//String filename = "/home/anjan/src/sgd/crf/result/test.smaller.c1";
+		String filename = "/data/onco_pos/clean/smaller/test.variational.7layers.10states.c2";
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		String line;
 		int total = 0;
@@ -47,13 +48,11 @@ public class EvaluateAccuracy {
 				total++;
 			}
 		}
-		/*
 		System.out.println("correct : " + correct);
 		System.out.println("Total : " + total);
 		
 		System.out.println("unkCorrect : " + unkCorrect);
 		System.out.println("unkTotal : " + unkTotal);
-		*/
 		double accuracy = (100.0 * correct / total);
 		double unkAccuracy = (100.0 * unkCorrect / unkTotal);
 		System.out.format("Accuracy = %.2f\n", accuracy);

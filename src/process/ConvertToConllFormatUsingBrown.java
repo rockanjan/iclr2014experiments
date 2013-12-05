@@ -17,7 +17,7 @@ public class ConvertToConllFormatUsingBrown {
 		BrownClusterRepresentation.createBrownClusterMap(brownFilename);
 		
 		Vocabulary v = new Vocabulary();
-		v.readDictionary("/data/onco_pos/clean/all/vocab.txt.thres1");
+		v.readDictionary("/data/onco_pos/clean/all/vocab.txt.thres0");
 		//String filename = "/data/onco_pos/clean/all/onco_test.561";
 		String filename = "/data/onco_pos/clean/all/train.40k";
 		String outFilename = filename + ".conll.brown";
@@ -27,6 +27,7 @@ public class ConvertToConllFormatUsingBrown {
 		String line = "";
 		int totalTokens = 0;
 		int totalUnknowns = 0;
+		int totalBrownUnknown = 0;
 		while( (line = br.readLine()) != null) {
 			String[] words = line.split("\\s+");
 			line = br.readLine(); //tags
@@ -91,6 +92,11 @@ public class ConvertToConllFormatUsingBrown {
 					smoothedWord = "*unk*";
 					totalUnknowns++;
 				}
+				String brownRep = BrownClusterRepresentation.getRepresentation(word);
+				if(brownRep.equals("-1")) {
+					totalBrownUnknown++;
+				}
+				
 				//write
 				pw.println(word + spaces(15 - word.length()) + 
 						smoothedWord.toLowerCase() + spaces(15 - smoothedWord.length()) +
@@ -107,7 +113,7 @@ public class ConvertToConllFormatUsingBrown {
 						containsNumber + " " +
 						containsUpper + " " +
 						containsHyphen + " " +
-						BrownClusterRepresentation.getRepresentation(word) + " " +
+						brownRep + " " +
 						tag
 						);
 				
@@ -117,6 +123,7 @@ public class ConvertToConllFormatUsingBrown {
 		br.close();
 		pw.close();
 		System.out.println("Total tokens = " + totalTokens + " Total Unknowns = " + totalUnknowns + " frac = " + (1.0 * totalUnknowns/totalTokens));
+		System.out.println("Total brown unk = " + totalBrownUnknown + " frac = " + (1.0 * totalBrownUnknown / totalTokens));
 	}
 	
 	public static String spaces(int size) {
