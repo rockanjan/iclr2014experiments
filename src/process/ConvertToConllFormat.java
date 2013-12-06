@@ -12,9 +12,9 @@ public class ConvertToConllFormat {
 	//to extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws IOException {
 		Vocabulary v = new Vocabulary();
-		v.readDictionary("/data/onco_pos/vocab.txt.thres0.lower.no_smooth");
-		//String filename = "/data/onco_pos/clean/all/wsj_dev.500";
+		v.readDictionary("/data/onco_pos/vocab.txt.thres0");
 		String filename = "/data/onco_pos/onco_test.561";
+		//String filename = "/data/onco_pos/train.40k";
 		String outFilename = filename + ".conll";
 		
 		PrintWriter pw = new PrintWriter(outFilename);
@@ -38,35 +38,40 @@ public class ConvertToConllFormat {
 				String tag = tags[i];
 				String smoothedWord = TokenProcessor.getSmoothedWord(word);
 				String lower = smoothedWord.toLowerCase();
-				//prefix
+				//prefix defaults
 				String[] prefix = new String[4];
 				for(int p=0; p<4; p++) {
 					prefix[p] = "_NA_";
 				}
-				prefix[0] = lower.substring(0, 1);
-				if(lower.length() > 1) {
-					prefix[1] = lower.substring(0,2);
-					if(lower.length() > 2) {
-						prefix[2] = lower.substring(0,3);
-						if(lower.length() > 3) {
-							prefix[3] = lower.substring(0,4);
-						}
-					}					
-				}
+				//suffix defaults
 				String[] suffix = new String[4];
 				for(int s=0; s<4; s++) {
 					suffix[s] = "_NA_";
 				}
-				suffix[0] = lower.substring(lower.length()-1, lower.length());
-				if(word.length() > 1) {
-					suffix[1] = lower.substring(lower.length()-2, lower.length());
-					if(word.length() > 2) {
-						suffix[2] = lower.substring(lower.length()-3, lower.length());
-						if(word.length() > 3) {
-							suffix[3] = lower.substring(lower.length()-4, lower.length());
-						}
-					}					
+				
+				if(! lower.equals("<num>")) {
+					prefix[0] = lower.substring(0, 1);
+					if(lower.length() > 1) {
+						prefix[1] = lower.substring(0,2);
+						if(lower.length() > 2) {
+							prefix[2] = lower.substring(0,3);
+							if(lower.length() > 3) {
+								prefix[3] = lower.substring(0,4);
+							}
+						}					
+					}
+					suffix[0] = lower.substring(lower.length()-1, lower.length());
+					if(word.length() > 1) {
+						suffix[1] = lower.substring(lower.length()-2, lower.length());
+						if(word.length() > 2) {
+							suffix[2] = lower.substring(lower.length()-3, lower.length());
+							if(word.length() > 3) {
+								suffix[3] = lower.substring(lower.length()-4, lower.length());
+							}
+						}					
+					}
 				}
+				
 				String containsNumber = "N";
 				//contains number?
 				if(smoothedWord.contains("_NUM_") || smoothedWord.contains("<num>")) {
