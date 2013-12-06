@@ -68,6 +68,18 @@ public class TokenProcessor {
 		return result;
 	}
 	
+	public static boolean allCaps(String word) {
+		boolean result = true;
+		for(int i=0; i<word.length(); i++) {
+			char c = word.charAt(i);
+			if(c < 'A' || c > 'Z') {
+				result = false;
+				break;
+			}
+		}
+		return result;
+	}
+	
 	public static boolean isAllCaps(String word) {
 		boolean result = true;
 		for(int i=0; i<word.length(); i++) {
@@ -122,6 +134,7 @@ public class TokenProcessor {
 	}
 	
 	public static String suffixesOrthographic(String word) {
+		//WARNING: ORDER MATTERS! mainly for -s and -ies
 		String suffix= "_NA_";
 		int wordLength = word.length();
 		if(word.endsWith("ing")) {

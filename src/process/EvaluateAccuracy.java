@@ -9,13 +9,11 @@ public class EvaluateAccuracy {
 	public static void main(String[] args) throws IOException {
 		Vocabulary v = new Vocabulary();
 		v.debug = false;
-		v.readDictionary("/data/onco_pos/clean/smaller/vocab.txt.thres0");
+		v.readDictionary("/data/onco_pos/vocab.txt.thres0.lower.no_smooth");
 		
 		boolean smooth = false; //smooth before checking the vocab
 		boolean includeNum = true; //this does not matter if smooth=false
-		//String filename = "/home/anjan/src/sgd/crf/onco_test.561.conll.clean.rep.gold.pred.c2";
-		//String filename = "/home/anjan/src/sgd/crf/result/test.smaller.c1";
-		String filename = "/data/onco_pos/clean/smaller/test.variational.7layers.10states.c2";
+		String filename = "/data/onco_pos/old/onco_test.561.conll.baseline.gold.pred";
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		String line;
 		int total = 0;

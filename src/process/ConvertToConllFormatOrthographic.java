@@ -9,12 +9,11 @@ import java.io.PrintWriter;
  * takes one line sentence and next line tags, creates format for crf to process (conll format with extracted features)
  */
 public class ConvertToConllFormatOrthographic {
-	//to extract features as described by Ratnaparkhi
+	//to extract features as described by Huang and Yates
 	public static void main(String[] args) throws IOException {
 		Vocabulary v = new Vocabulary();
-		v.readDictionary("/data/onco_pos/clean/smaller/vocab.txt.thres1");
-		//String filename = "/data/onco_pos/clean/all/train.40k";
-		String filename = "/data/onco_pos/clean/smaller/wsj_ul.5k";
+		v.readDictionary("/data/onco_pos/vocab.txt.thres0");
+		String filename = "/data/onco_pos/train.40k";
 		String outFilename = filename + ".conll";
 		
 		PrintWriter pw = new PrintWriter(outFilename);
@@ -41,6 +40,11 @@ public class ConvertToConllFormatOrthographic {
 				
 				String suffix = TokenProcessor.suffixesOrthographic(lower);
 				
+				String containsUpper = "N"; //if not the beginning of the word
+				if(TokenProcessor.hasCaps(word)) {
+					containsUpper = "Y";
+				}
+				
 				String containsNumber = "N";
 				//contains number?
 				if(smoothedWord.contains("_NUM_") || smoothedWord.contains("<num>")) {
@@ -56,6 +60,7 @@ public class ConvertToConllFormatOrthographic {
 				pw.println(word + spaces(15 - word.length()) + 
 						smoothedWord.toLowerCase() + spaces(15 - smoothedWord.length()) +
 						suffix + spaces(5-suffix.length()) +
+						containsUpper + spaces(5 - containsUpper.length()) +
 						containsNumber + " " +
 						tag
 						);

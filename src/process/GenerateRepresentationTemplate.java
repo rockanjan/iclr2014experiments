@@ -27,8 +27,8 @@ public class GenerateRepresentationTemplate {
 	
 	//extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws FileNotFoundException {
-		int REP_LENGTH = 7;
-		String templateFile = "/data/onco_pos/clean/smaller/representation.template";
+		int REP_LENGTH = 1;
+		String templateFile = "/data/onco_pos/representation.template";
 		StringBuffer content = new StringBuffer();
 		int featureIndex = 0;
 		//smoothed word upto hasHyphen
@@ -45,6 +45,17 @@ public class GenerateRepresentationTemplate {
 		}
 		
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
+			//unigram of rep
+			for(int i=0; i<=0; i++) {
+				content.append(String.format("U%d:%%x[%d,%d]\n", featureIndex, i, (13+d)));
+				featureIndex++;
+			}
+		}
+		
+		
+		/*
+		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
+			//bigrams
 			for(int i=0; i<=0; i++) {
 				content.append(String.format("U%d:%%x[%d,%d]/%%x[%d,%d]\n", featureIndex, i, (13+d), i-1, (13+d)));
 				featureIndex++;
@@ -52,6 +63,7 @@ public class GenerateRepresentationTemplate {
 				featureIndex++;
 			}
 		}
+		*/
 		
 		/*
 		//my : combine representation with suffixes

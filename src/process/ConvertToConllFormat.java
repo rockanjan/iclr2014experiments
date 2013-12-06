@@ -12,9 +12,9 @@ public class ConvertToConllFormat {
 	//to extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws IOException {
 		Vocabulary v = new Vocabulary();
-		v.readDictionary("/data/onco_pos/clean/all/vocab.txt.thres1");
+		v.readDictionary("/data/onco_pos/vocab.txt.thres0.lower.no_smooth");
 		//String filename = "/data/onco_pos/clean/all/wsj_dev.500";
-		String filename = "/data/onco_pos/clean/all/train.40k";
+		String filename = "/data/onco_pos/onco_test.561";
 		String outFilename = filename + ".conll";
 		
 		PrintWriter pw = new PrintWriter(outFilename);
@@ -73,7 +73,8 @@ public class ConvertToConllFormat {
 					containsNumber = "Y";
 				}
 				String containsUpper = "N"; //if not the beginning of the word
-				if(i != 0 && TokenProcessor.hasCaps(word)) {
+				//if(i != 0 && TokenProcessor.hasCaps(word)) {
+				if(TokenProcessor.hasCaps(word)) {
 					containsUpper = "Y";
 				}
 				String containsHyphen = "N";
