@@ -61,11 +61,11 @@ public class ConvertToConllFormat {
 						}					
 					}
 					suffix[0] = lower.substring(lower.length()-1, lower.length());
-					if(word.length() > 1) {
+					if(lower.length() > 1) {
 						suffix[1] = lower.substring(lower.length()-2, lower.length());
-						if(word.length() > 2) {
+						if(lower.length() > 2) {
 							suffix[2] = lower.substring(lower.length()-3, lower.length());
-							if(word.length() > 3) {
+							if(lower.length() > 3) {
 								suffix[3] = lower.substring(lower.length()-4, lower.length());
 							}
 						}					
