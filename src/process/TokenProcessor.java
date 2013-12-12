@@ -5,10 +5,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TokenProcessor {
+	static String NUM = "<num>";
 	public static String getSmoothedWord(String queryWord) {
 		//String word = queryWord.toLowerCase();
 		String word = queryWord;
-		String NUM = "<num>";
+		
 		
 		//try to match date
 		Pattern p0 = Pattern.compile("[0-9]{4}"); //possible dates
@@ -56,6 +57,55 @@ public class TokenProcessor {
 		return word;
 	}
 	
+	public static String getAlphaNumericType(String smoothedWord) {
+		String type = "_MIXED_";
+		if(smoothedWord.equals(NUM)) {
+			type = "_NUM_";
+		} else if(smoothedWord.contains(NUM) || smoothedWord.matches(".*[0-9]+.*")) {
+			String numReplaced = smoothedWord.replaceAll("[0-9]+", "");
+			numReplaced = numReplaced.replaceAll(NUM,"");
+			for(int i=0; i<numReplaced.length(); i++) {
+				char c = numReplaced.charAt(i);
+				if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+					type = "_ALPHANUM_";
+				}
+			}
+		} else {
+			boolean containsAlpha = false;
+			boolean containsAllAlpha = true;
+			for(int i=0; i<smoothedWord.length(); i++) {
+				char c = smoothedWord.charAt(i);
+				if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) {
+					containsAlpha = true;
+				} else {
+					containsAllAlpha = false;
+				}
+			}
+			if(containsAllAlpha) {
+				type = "_ALPHA_";
+			}
+			if(! containsAlpha) {
+				type = "_SYM_";
+			}
+		}
+		return type;	
+	}
+	
+	public static String getCapitalType(String word) {
+		String type = "_NA_";
+		if(word.equals(word.toLowerCase())) {
+			type = "_LOWER_";
+		}
+		if(hasAllCaps(word)) {
+			type = "_ALLCAP_";
+		} else if(hasTitleCase(word)) {
+			type = "_TITLE_";
+		} else if(hasCaps(word)) {
+			type = "_HASCAP_";
+		}
+		return type;
+	}
+	
 	public static boolean hasCaps(String word) {
 		boolean result = false;
 		for(int i=0; i<word.length(); i++) {
@@ -68,7 +118,8 @@ public class TokenProcessor {
 		return result;
 	}
 	
-	public static boolean allCaps(String word) {
+	
+	public static boolean hasAllCaps(String word) {
 		boolean result = true;
 		for(int i=0; i<word.length(); i++) {
 			char c = word.charAt(i);
@@ -80,19 +131,22 @@ public class TokenProcessor {
 		return result;
 	}
 	
-	public static boolean isAllCaps(String word) {
-		boolean result = true;
-		for(int i=0; i<word.length(); i++) {
-			char c = word.charAt(i);
-			if(c < 'A' || c > 'Z') {
-				result = false;
-				break;
-			}
-		}
-		return result;
+	public static boolean hasFirstCapFollowedByaToz(String word) {
+		Pattern p = Pattern.compile("^[A-Z][a-z].*");
+		Matcher m = p.matcher(word);
+		return m.matches();
 	}
 	
-	public static boolean isInitialCap(String word) {
+	//different than hasInitialCap. only the initial has to be capital
+	public static boolean hasTitleCase(String word) {
+		String wordWithoutInitial = word.substring(1);
+		if(hasInitialCap(word) && wordWithoutInitial.equals(wordWithoutInitial.toLowerCase())) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean hasInitialCap(String word) {
 		char c = word.charAt(0); 
 		if(c >= 'A' && c <= 'Z') {
 			return true;
@@ -137,34 +191,71 @@ public class TokenProcessor {
 		//WARNING: ORDER MATTERS! mainly for -s and -ies
 		String suffix= "_NA_";
 		int wordLength = word.length();
-		if(word.endsWith("ing")) {
+		if(wordLength > 3 && word.endsWith("ing")) {
 			suffix = "-ing";
 		}
-		if(word.endsWith("ogy")) {
+		if(wordLength > 3 && word.endsWith("ogy")) {
 			suffix = "-ogy";
 		}
-		if(word.endsWith("ed")) {
+		if(wordLength > 2 && word.endsWith("ed")) {
 			suffix = "-ed";
 		}
-		if(word.endsWith("s")) {
+		if(wordLength > 1 && word.endsWith("s")) {
 			suffix = "-s";
 		}
-		if(word.endsWith("ly")) {
+		if(wordLength > 2 && word.endsWith("ly")) {
 			suffix = "-ly";
 		}
-		if(word.endsWith("ion")) {
+		if(wordLength > 3 && word.endsWith("ion")) {
 			suffix = "-ion";
 		}
-		if(word.endsWith("tion")) {
+		if(wordLength > 4 && word.endsWith("tion")) {
 			suffix = "-tion";
 		}
-		if(word.endsWith("ity")) {
+		if(wordLength > 3 && word.endsWith("ity")) {
 			suffix = "-ity";
 		}
-		if(word.endsWith("ies")) {
+		if(wordLength > 3 && word.endsWith("ies")) {
 			suffix = "-ies";
 		}
+		if(wordLength > 3 && word.endsWith("ous")) {
+			suffix = "-ous";
+		}
+		
+		//Anjan added
+		/*
+		if(wordLength > 2 && word.endsWith("al")) {
+			suffix = "-al";
+		}
+		if(wordLength > 3 && word.endsWith("ary")) {
+			suffix = "-ary";
+		}
+		if(wordLength > 2 && word.endsWith("en")) {
+			suffix = "-en";
+		}
+		if(wordLength > 2 && word.endsWith("ic")) {
+			suffix = "-ic";
+		}
+		if(wordLength > 3 && word.endsWith("ant")) {
+			suffix = "-ant";
+		}
+		if(wordLength > 3 && word.endsWith("ble")) {
+			suffix = "-ble";
+		}
+		*/
 		return suffix;
+	}
+	
+	public static String prefixesOrthographic(String word) {
+		String prefix= "_NA_";
+		int wordLength = word.length();
+		if(wordLength > 2 && word.startsWith("un")) {
+			prefix = "un-";
+		}
+		if(wordLength > 3 && word.startsWith("non")) {
+			prefix = "non-";
+		}
+		return prefix;		
 	}
 	
 	public static void main(String[] args) {
@@ -176,11 +267,11 @@ public class TokenProcessor {
 		System.out.println(TokenProcessor.getSmoothedWord("12/10/2012"));
 		System.out.println(TokenProcessor.getSmoothedWord("19.02"));
 		System.out.println(TokenProcessor.getSmoothedWord("2-for-3"));
-		System.out.println(TokenProcessor.isAllCaps("EBay"));
-		System.out.println(TokenProcessor.isAllCaps("EBAY"));
+		System.out.println(TokenProcessor.hasAllCaps("EBay"));
+		System.out.println(TokenProcessor.hasAllCaps("EBAY"));
 		
-		System.out.println(TokenProcessor.isInitialCap("eBay"));
-		System.out.println(TokenProcessor.isInitialCap("EBay"));
+		System.out.println(TokenProcessor.hasInitialCap("eBay"));
+		System.out.println(TokenProcessor.hasInitialCap("EBay"));
 		
 		String word = "how";
 		String[] prefixes = TokenProcessor.prefixes(word);

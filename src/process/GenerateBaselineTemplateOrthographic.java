@@ -8,19 +8,20 @@ public class GenerateBaselineTemplateOrthographic {
 	/*
 	word
 	smoothedWord
+	prefix
 	suffix
-	hasUpper
-	hasNumber
+	caps
+	alphanum
 	label;
 	*/
 	
 	//extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws FileNotFoundException {
-		String templateFile = "/data/onco_pos/baseline.template.orthographic";
+		String templateFile = "/data/onco_pos/new/baseline.template.orthographic";
 		StringBuffer content = new StringBuffer();
 		int featureIndex = 0;
-		//smoothed word upto hasHyphen
-		for(int i=1; i<=4; i++) {
+		for(int i=1; i<=5; i++) {
+			if(i==2) continue; //don't include prefix
 			content.append(String.format("U%d:%%x[0,%d]\n", featureIndex, i));
 			featureIndex++;
 		}

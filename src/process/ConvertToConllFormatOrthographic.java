@@ -11,10 +11,11 @@ import java.io.PrintWriter;
 public class ConvertToConllFormatOrthographic {
 	//to extract features as described by Huang and Yates
 	public static void main(String[] args) throws IOException {
+		int SPACESIZE = 10;
 		Vocabulary v = new Vocabulary();
 		v.readDictionary("/data/onco_pos/vocab.txt.thres0");
-		String filename = "/data/onco_pos/train.40k";
-		String outFilename = filename + ".conll";
+		String filename = "/data/onco_pos/new/train.40k";
+		String outFilename = filename + ".conll.ortho";
 		
 		PrintWriter pw = new PrintWriter(outFilename);
 		BufferedReader br = new BufferedReader(new FileReader(filename));
@@ -28,45 +29,47 @@ public class ConvertToConllFormatOrthographic {
 			//assert they are the same length
 			int length = words.length;
 			if(length != tags.length) {
+				br.close();
+				pw.close();
 				throw new RuntimeException("Word and Tag length do not match");
 			}
 			//start extracting features and writing to the file
 			for(int i=0; i<length; i++) {
 				totalTokens++;
 				String word = words[i];
-				String tag = tags[i];
+				String tag = tags[i].toUpperCase();
 				String smoothedWord = TokenProcessor.getSmoothedWord(word);
 				String lower = smoothedWord.toLowerCase();
 				
+				String prefix = TokenProcessor.prefixesOrthographic(lower);
 				String suffix = TokenProcessor.suffixesOrthographic(lower);
 				
-				String containsUpper = "N"; //if not the beginning of the word
-				if(TokenProcessor.hasCaps(word)) {
-					containsUpper = "Y";
+				String caps = TokenProcessor.getCapitalType(word);
+				if(i==0) {
+					caps = caps + "BOS"; //BOS
 				}
 				
-				String containsNumber = "N";
-				//contains number?
-				if(smoothedWord.contains("_NUM_") || smoothedWord.contains("<num>")) {
-					containsNumber = "Y";
-				}
+				String alphaNum = TokenProcessor.getAlphaNumericType(smoothedWord);
 				
 				smoothedWord = smoothedWord.toLowerCase(); 
 				if(v.getIndex(smoothedWord) == 0) {
 					smoothedWord = "*unk*";
 					totalUnknowns++;
 				}
+				
 				//write
 				pw.println(word + spaces(15 - word.length()) + 
 						smoothedWord.toLowerCase() + spaces(15 - smoothedWord.length()) +
-						suffix + spaces(5-suffix.length()) +
-						containsUpper + spaces(5 - containsUpper.length()) +
-						containsNumber + " " +
+						prefix + spaces(SPACESIZE - prefix.length()) +
+						suffix + spaces(SPACESIZE - suffix.length()) +
+						caps + spaces(SPACESIZE - caps.length()) +
+						alphaNum + spaces(SPACESIZE - alphaNum.length()) +
 						tag
 						);
 				
 			}
 			pw.println();
+			pw.flush();
 		}
 		br.close();
 		pw.close();

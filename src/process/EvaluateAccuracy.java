@@ -9,20 +9,30 @@ public class EvaluateAccuracy {
 	public static void main(String[] args) throws IOException {
 		Vocabulary v = new Vocabulary();
 		v.debug = false;
-		v.readDictionary("/data/onco_pos/vocab.txt.thres0.lower.no_smooth");
-		
+		//v.readDictionary("/data/onco_pos/vocab.txt.thres0");
+		v.readDictionary("/data/onco_pos/vocab.txt.thres0");
 		boolean smooth = false; //smooth before checking the vocab
 		boolean includeNum = true; //this does not matter if smooth=false
-		String filename = "/data/onco_pos/old/onco_test.561.conll.baseline.gold.pred";
+		String filename = "/data/onco_pos/new/test.rep.fhmm.triple.f5.c2";
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		String line;
 		int total = 0;
 		int correct = 0;
 		int unkTotal = 0;
 		int unkCorrect = 0;
+		
+		int colLength = -1;
 		while( (line = br.readLine()) != null ) {
 			if(! line.trim().isEmpty() ) {
+				total++;
 				String[] tokens = line.split("\\s+");
+				if(colLength == -1) { //first row
+					colLength = tokens.length;
+				}
+				if(tokens.length != colLength) {
+					System.err.println("WARNING: Column length mismatch. First found : " + colLength + " new found " + tokens.length);
+					System.err.println("Line = " + line);
+				}
 				String gold = tokens[tokens.length - 2];
 				String pred = tokens[tokens.length - 1];
 				String word = tokens[0].toLowerCase();
@@ -43,7 +53,6 @@ public class EvaluateAccuracy {
 						unkCorrect++;
 					}
 				}
-				total++;
 			}
 		}
 		System.out.println("correct : " + correct);

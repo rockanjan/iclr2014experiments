@@ -8,17 +8,10 @@ public class GenerateRepresentationTemplateOrthographic {
 	/*
 	word
 	smoothedWord
-	prefix1
-	prefix2
-	prefix3
-	prefix4
-	suffix1
-	suffix2
-	suffix3
-	suffix4
-	hasNumber
-	hasUpper
-	hasHyphen
+	prefix
+	suffix
+	caps
+	alphanum
 	rep1
 	...
 	repn
@@ -28,11 +21,12 @@ public class GenerateRepresentationTemplateOrthographic {
 	//extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws FileNotFoundException {
 		int REP_LENGTH = 1;
-		String templateFile = "/data/onco_pos/smaller/representation.template";
+		String templateFile = "/data/onco_pos/new/representation.template.orthographic";
 		StringBuffer content = new StringBuffer();
 		int featureIndex = 0;
-		//smoothed word upto hasHyphen
-		for(int i=1; i<=12; i++) {
+		
+		for(int i=1; i<=5; i++) {
+			if(i==2) continue; //don't include prefix
 			content.append(String.format("U%d:%%x[0,%d]\n", featureIndex, i));
 			featureIndex++;
 		}
@@ -51,6 +45,14 @@ public class GenerateRepresentationTemplateOrthographic {
 			}
 		}
 		
+		//rep combined with other features
+		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
+			for(int i=-1; i<=1; i++) {
+				content.append(String.format("U%d:%%x[%d,%d]\n", featureIndex, i, (13+d)));
+				featureIndex++;
+			}
+		}
+		
 		//bigram
 		int bigramFeatureIndex = 0;
 		content.append(String.format("B%d\n", bigramFeatureIndex));
@@ -58,7 +60,7 @@ public class GenerateRepresentationTemplateOrthographic {
 		
 		
 		//my: bigram + hmm
-		content.append(String.format("B%d:%%x[0,13]\n", bigramFeatureIndex));
+		//content.append(String.format("B%d:%%x[0,13]\n", bigramFeatureIndex));
 		
 		System.out.println(content.toString());
 		PrintWriter pw = new PrintWriter(templateFile);

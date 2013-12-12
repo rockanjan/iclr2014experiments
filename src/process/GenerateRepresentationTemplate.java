@@ -46,18 +46,19 @@ public class GenerateRepresentationTemplate {
 		
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
 			//unigram of rep
-			for(int i=0; i<=0; i++) {
+			for(int i=-1; i<=1; i++) {
 				content.append(String.format("U%d:%%x[%d,%d]\n", featureIndex, i, (13+d)));
 				featureIndex++;
 			}
 		}
 		
 		
+		
 		/*
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
 			//bigrams
 			for(int i=0; i<=0; i++) {
-				content.append(String.format("U%d:%%x[%d,%d]/%%x[%d,%d]\n", featureIndex, i, (13+d), i-1, (13+d)));
+				content.append(String.format("U%d:%%x[%d,%d]/%%x[%d,%d]\n", featureIndex, i-1, (13+d), i, (13+d)));
 				featureIndex++;
 				content.append(String.format("U%d:%%x[%d,%d]/%%x[%d,%d]\n", featureIndex, i, (13+d), i+1, (13+d)));
 				featureIndex++;
@@ -65,13 +66,26 @@ public class GenerateRepresentationTemplate {
 		}
 		*/
 		
-		/*
+		
 		//my : combine representation with suffixes
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
 			for(int i=0; i<4; i++) {
 				content.append(String.format("U%d:%%x[%d,%d]/%%x[%d,%d]\n", featureIndex, 0, (13+d), 0, (6+i)));
 				featureIndex++;
 			}
+		}
+		
+		/*
+		//my : combine representation with capital
+		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
+			content.append(String.format("U%d:%%x[%d,%d]/%%x[%d,%d]\n", featureIndex, 0, (13+d), 0, (11)));
+			featureIndex++;
+		}
+		
+		//my : combine representation with capital and 1suffix
+		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
+			content.append(String.format("U%d:%%x[%d,%d]/%%x[%d,%d]/%%x[0,6]\n", featureIndex, 0, (13+d), 0, (11)));
+			featureIndex++;
 		}
 		*/
 		

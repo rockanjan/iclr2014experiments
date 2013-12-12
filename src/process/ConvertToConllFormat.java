@@ -12,9 +12,10 @@ public class ConvertToConllFormat {
 	//to extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws IOException {
 		Vocabulary v = new Vocabulary();
+		//with thres 1, we can allow few word in the training to also be OOV
 		v.readDictionary("/data/onco_pos/vocab.txt.thres0");
-		String filename = "/data/onco_pos/onco_test.561";
-		//String filename = "/data/onco_pos/train.40k";
+		//String filename = "/data/onco_pos/onco_test.561";
+		String filename = "/data/onco_pos/train.40k";
 		String outFilename = filename + ".conll";
 		
 		PrintWriter pw = new PrintWriter(outFilename);
@@ -29,6 +30,8 @@ public class ConvertToConllFormat {
 			//assert they are the same length
 			int length = words.length;
 			if(length != tags.length) {
+				pw.close();
+				br.close();
 				throw new RuntimeException("Word and Tag length do not match");
 			}
 			//start extracting features and writing to the file
@@ -49,26 +52,34 @@ public class ConvertToConllFormat {
 					suffix[s] = "_NA_";
 				}
 				
-				if(! lower.equals("<num>")) {
-					prefix[0] = lower.substring(0, 1);
+				//don't include same length word as a suffix 
+				if(! lower.startsWith("<num>")) {
 					if(lower.length() > 1) {
-						prefix[1] = lower.substring(0,2);
+						prefix[0] = lower.substring(0, 1);
 						if(lower.length() > 2) {
-							prefix[2] = lower.substring(0,3);
+							prefix[1] = lower.substring(0,2);
 							if(lower.length() > 3) {
-								prefix[3] = lower.substring(0,4);
-							}
-						}					
+								prefix[2] = lower.substring(0,3);
+								if(lower.length() > 4) {
+									prefix[3] = lower.substring(0,4);
+								}
+							}					
+						}
 					}
-					suffix[0] = lower.substring(lower.length()-1, lower.length());
+				}
+				
+				if(!lower.endsWith("<num>")) {
 					if(lower.length() > 1) {
-						suffix[1] = lower.substring(lower.length()-2, lower.length());
+						suffix[0] = lower.substring(lower.length()-1, lower.length());
 						if(lower.length() > 2) {
-							suffix[2] = lower.substring(lower.length()-3, lower.length());
+							suffix[1] = lower.substring(lower.length()-2, lower.length());
 							if(lower.length() > 3) {
-								suffix[3] = lower.substring(lower.length()-4, lower.length());
+								suffix[2] = lower.substring(lower.length()-3, lower.length());
+								if(lower.length() > 4) {
+									suffix[3] = lower.substring(lower.length()-4, lower.length());
+								}
 							}
-						}					
+						}
 					}
 				}
 				
@@ -77,11 +88,22 @@ public class ConvertToConllFormat {
 				if(smoothedWord.contains("_NUM_") || smoothedWord.contains("<num>")) {
 					containsNumber = "Y";
 				}
+				/*
 				String containsUpper = "N"; //if not the beginning of the word
 				//if(i != 0 && TokenProcessor.hasCaps(word)) {
 				if(TokenProcessor.hasCaps(word)) {
 					containsUpper = "Y";
 				}
+				*/
+				/*
+				String upper = TokenProcessor.getCapitalType(word);
+				if(i == 0) {
+					upper = upper + "0";
+				}
+				*/
+				String upper = TokenProcessor.hasFirstCapFollowedByaToz(word) ? "Y" : "N";
+						
+				
 				String containsHyphen = "N";
 				if(word.contains("-")) {
 					containsHyphen = "Y";
@@ -106,13 +128,14 @@ public class ConvertToConllFormat {
 						suffix[3] + spaces(5-suffix[3].length()) +
 						
 						containsNumber + " " +
-						containsUpper + " " +
+						upper + " " +
 						containsHyphen + " " +
 						tag
 						);
 				
 			}
 			pw.println();
+			pw.flush();
 		}
 		br.close();
 		pw.close();
