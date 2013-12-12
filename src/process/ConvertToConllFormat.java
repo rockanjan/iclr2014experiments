@@ -97,12 +97,11 @@ public class ConvertToConllFormat {
 				*/
 				/*
 				String upper = TokenProcessor.getCapitalType(word);
-				if(i == 0) {
-					upper = upper + "0";
-				}
 				*/
 				String upper = TokenProcessor.hasFirstCapFollowedByaToz(word) ? "Y" : "N";
-						
+				if(i == 0) {
+					upper = upper + "0";
+				}		
 				
 				String containsHyphen = "N";
 				if(word.contains("-")) {

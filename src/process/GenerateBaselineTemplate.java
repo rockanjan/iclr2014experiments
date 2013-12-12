@@ -24,7 +24,7 @@ public class GenerateBaselineTemplate {
 	
 	//extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws FileNotFoundException {
-		String templateFile = "/data/onco_pos/baseline.template";
+		String templateFile = "/data/onco_pos/baseline.template.basic";
 		StringBuffer content = new StringBuffer();
 		int featureIndex = 0;
 		//smoothed word upto hasHyphen
@@ -32,6 +32,7 @@ public class GenerateBaselineTemplate {
 			content.append(String.format("U%d:%%x[0,%d]\n", featureIndex, i));
 			featureIndex++;
 		}
+		/*
 		//context words
 		for(int i=-2; i<=2; i++) {
 			if(i != 0) { //already included above
@@ -39,6 +40,8 @@ public class GenerateBaselineTemplate {
 				featureIndex++;
 			}
 		}
+		*/
+		
 		//bigram
 		int bigramFeatureIndex = 0;
 		content.append(String.format("B%d\n", bigramFeatureIndex));
