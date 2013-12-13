@@ -12,7 +12,7 @@ public class EvaluateAccuracy {
 		//v.readDictionary("/data/onco_pos/vocab.txt.thres0");
 		v.readDictionary("/data/onco_pos/vocab.txt.thres0");
 		boolean smooth = false; //smooth before checking the vocab
-		boolean includeNum = true; //this does not matter if smooth=false
+		boolean includeNum = false; //this does not matter if smooth=false
 		String filename = "/data/onco_pos/new/test.rep.fhmm.triple.f5.c2";
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		String line;

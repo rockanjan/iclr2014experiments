@@ -14,8 +14,8 @@ public class ConvertToConllFormat {
 		Vocabulary v = new Vocabulary();
 		//with thres 1, we can allow few word in the training to also be OOV
 		v.readDictionary("/data/onco_pos/vocab.txt.thres0");
-		//String filename = "/data/onco_pos/onco_test.561";
-		String filename = "/data/onco_pos/train.40k";
+		String filename = "/data/onco_pos/onco_test.561";
+		//String filename = "/data/onco_pos/train.40k";
 		String outFilename = filename + ".conll";
 		
 		PrintWriter pw = new PrintWriter(outFilename);
