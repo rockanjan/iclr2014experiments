@@ -17,7 +17,7 @@ public class Vocabulary {
 	public boolean debug = true;
 	public boolean smooth = true;
 	public boolean lower = true;
-	public int vocabThreshold = 1;
+	public int vocabThreshold = 2;
 	//index zero reserved for *unk* (low freq features)
 	public int vocabReadIndex = 0;
 	public int vocabSize = 0;
@@ -27,8 +27,8 @@ public class Vocabulary {
 	public Map<Integer, Integer> indexToFrequency = new HashMap<Integer, Integer>();
 	
 	public static void main(String[] args) throws IOException {
-		boolean lower = true;
-		boolean smooth = true;
+		boolean lower = false;
+		boolean smooth = false;
 		boolean WPL = false; //word per line or sentence per line?
 		//read token per line
 		String folder = "/data/onco_pos/";

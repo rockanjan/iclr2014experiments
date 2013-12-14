@@ -28,7 +28,7 @@ public class GenerateRepresentationTemplateFHmmCombined {
 	//extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws FileNotFoundException {
 		int REP_LENGTH = 5;
-		String templateFile = "/data/onco_pos/new/representation.template.fhmm.combined.triple";
+		String templateFile = "/data/onco_pos/fhmm/representation.template.fhmm.combined.pair";
 		StringBuffer content = new StringBuffer();
 		int featureIndex = 0;
 		//smoothed word upto hasHyphen
@@ -62,33 +62,6 @@ public class GenerateRepresentationTemplateFHmmCombined {
 			}
 		}
 		
-		//my : combine representation with suffixes
-		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
-			for(int i=0; i<4; i++) {
-				content.append(String.format("U%d:%%x[%d,%d]/%%x[%d,%d]\n", featureIndex, 0, (13+d), 0, (6+i)));
-				featureIndex++;
-			}
-		}
-		
-		
-		//my : combine representation with capital
-		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
-			content.append(String.format("U%d:%%x[%d,%d]/%%x[%d,%d]\n", featureIndex, 0, (13+d), 0, (11)));
-			featureIndex++;
-		}
-		
-		//my : combine representation with capital and 1suffix
-		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
-			content.append(String.format("U%d:%%x[%d,%d]/%%x[%d,%d]/%%x[0,6]\n", featureIndex, 0, (13+d), 0, (11)));
-			featureIndex++;
-		}
-		
-		//representation trigram
-		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
-			content.append(String.format("U%d:%%x[-1,%d]/%%x[0,%d]/%%x[1,%d]\n", featureIndex, (13+d), (13+d), (13+d)));
-			featureIndex++;
-		}
-		
 		//representation combined (eg. n choose 2 for pairs)
 		int totalCombinedPairs = 0;
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
@@ -102,7 +75,7 @@ public class GenerateRepresentationTemplateFHmmCombined {
 		}
 		
 		int totalCombinedTriples = 0;
-		
+		/*
 		//representation combined (eg. n choose 3 for pairs)		
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
 			for(int e=0; e<REP_LENGTH; e++) {
@@ -117,7 +90,7 @@ public class GenerateRepresentationTemplateFHmmCombined {
 				}
 			}
 		}
-		
+		*/
 		
 		
 		//bigram

@@ -52,37 +52,50 @@ public class ConvertToConllFormat {
 					suffix[s] = "_NA_";
 				}
 				
-				//don't include same length word as a suffix 
-				if(! lower.startsWith("<num>")) {
-					if(lower.length() > 1) {
-						prefix[0] = lower.substring(0, 1);
-						if(lower.length() > 2) {
-							prefix[1] = lower.substring(0,2);
-							if(lower.length() > 3) {
-								prefix[2] = lower.substring(0,3);
-								if(lower.length() > 4) {
-									prefix[3] = lower.substring(0,4);
-								}
-							}					
-						}
+				if(lower.equals("<num>")) {
+					for(int p=0; p<4; p++) {
+						suffix[p] = "<num>";
+						prefix[p] = "<num>";
 					}
 				}
-				
-				if(!lower.endsWith("<num>")) {
+				else { 
+					if(! lower.startsWith("<num>")) {
+					prefix[0] = lower.substring(0, 1);
 					if(lower.length() > 1) {
-						suffix[0] = lower.substring(lower.length()-1, lower.length());
+						prefix[0] = prefix[0] + "_"; //to indicate there is something after the prefix0
+						prefix[1] = lower.substring(0,2);
 						if(lower.length() > 2) {
-							suffix[1] = lower.substring(lower.length()-2, lower.length());
+							prefix[1] = prefix[1] + "_";
+							prefix[2] = lower.substring(0,3);
 							if(lower.length() > 3) {
-								suffix[2] = lower.substring(lower.length()-3, lower.length());
+								prefix[2] = prefix[2] + "_";
+								prefix[3] = lower.substring(0,4);
 								if(lower.length() > 4) {
+									prefix[3] = prefix[3] + "_";
+								}
+							}
+						}					
+					}
+					}
+					if(!lower.endsWith("<num>")) {
+						suffix[0] = lower.substring(lower.length()-1, lower.length());
+						if(lower.length() > 1) {
+							suffix[0] = "_" + suffix[0];
+							suffix[1] = lower.substring(lower.length()-2, lower.length());
+							if(lower.length() > 2) {
+								suffix[1] = "_" + suffix[1];
+								suffix[2] = lower.substring(lower.length()-3, lower.length());
+								if(lower.length() > 3) {
+									suffix[2] = "_" + suffix[2];
 									suffix[3] = lower.substring(lower.length()-4, lower.length());
+									if(lower.length() > 4) {
+										suffix[3] = "_" + suffix[3];
+									}
 								}
 							}
 						}
 					}
 				}
-				
 				String containsNumber = "N";
 				//contains number?
 				if(smoothedWord.contains("_NUM_") || smoothedWord.contains("<num>")) {

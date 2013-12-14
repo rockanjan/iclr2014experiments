@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 
 public class GenerateRepresentationTemplateFHmm {
 	/*
-	word
+	0. word
 	smoothedWord
 	prefix1
 	prefix2
@@ -16,8 +16,8 @@ public class GenerateRepresentationTemplateFHmm {
 	suffix2
 	suffix3
 	suffix4
-	hasNumber
-	hasUpper
+	10. hasNumber
+	11. hasUpper
 	hasHyphen
 	rep1
 	...
@@ -28,12 +28,11 @@ public class GenerateRepresentationTemplateFHmm {
 	//extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws FileNotFoundException {
 		int REP_LENGTH = 5;
-		String templateFile = "/data/onco_pos/representation.template.fhmm";
+		String templateFile = "/data/onco_pos/fhmm/representation.template.fhmm.basic";
 		StringBuffer content = new StringBuffer();
 		int featureIndex = 0;
 		//smoothed word upto hasHyphen
 		for(int i=1; i<=12; i++) {
-			if(i==11) continue;
 			content.append(String.format("U%d:%%x[0,%d]\n", featureIndex, i));
 			featureIndex++;
 		}
@@ -44,17 +43,22 @@ public class GenerateRepresentationTemplateFHmm {
 				featureIndex++;
 			}
 		}
+		/*
+		//prev + next words
+		content.append(String.format("U%d:%%x[%d,1]/%%x[%d,1]\n", featureIndex, -1, 1));
+		featureIndex++;
+		*/
 		
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
 			//unigram of rep
-			for(int i=-1; i<=1; i++) {
+			//for(int i=-1; i<=1; i++) {
+			for(int i=0; i<=0; i++) {
 				content.append(String.format("U%d:%%x[%d,%d]\n", featureIndex, i, (13+d)));
 				featureIndex++;
 			}
 		}
 		
-		
-		
+		/*
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
 			//bigrams
 			for(int i=0; i<=0; i++) {
@@ -64,9 +68,9 @@ public class GenerateRepresentationTemplateFHmm {
 				featureIndex++;
 			}
 		}
+		*/
 		
-		
-		
+		/*
 		//my : combine representation with suffixes
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
 			for(int i=0; i<4; i++) {
@@ -82,29 +86,23 @@ public class GenerateRepresentationTemplateFHmm {
 			featureIndex++;
 		}
 		
-		//my : combine representation with capital and 1suffix
+		
+		//my : combine representation with capital and 1 and 2 suffix
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
 			content.append(String.format("U%d:%%x[%d,%d]/%%x[%d,%d]/%%x[0,6]\n", featureIndex, 0, (13+d), 0, (11)));
 			featureIndex++;
-		}
-		
-		//representation trigram
-
-		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
-			content.append(String.format("U%d:%%x[-1,%d]/%%x[0,%d]/%%x[1,%d]\n", featureIndex, (13+d), (13+d), (13+d)));
+			content.append(String.format("U%d:%%x[%d,%d]/%%x[%d,%d]/%%x[0,7]\n", featureIndex, 0, (13+d), 0, (11)));
 			featureIndex++;
 		}
-		
+		*/
 		
 		//bigram
 		int bigramFeatureIndex = 0;
 		content.append(String.format("B%d\n", bigramFeatureIndex));
 		bigramFeatureIndex++;
 		
-		/*
-		//my: bigram + word
-		content.append(String.format("B%d:%%x[0,1]\n", bigramFeatureIndex));
-		*/
+		
+		
 		System.out.println(content.toString());
 		PrintWriter pw = new PrintWriter(templateFile);
 		pw.println(content.toString());

@@ -9,11 +9,12 @@ public class EvaluateAccuracy {
 	public static void main(String[] args) throws IOException {
 		Vocabulary v = new Vocabulary();
 		v.debug = false;
-		//v.readDictionary("/data/onco_pos/vocab.txt.thres0");
-		v.readDictionary("/data/onco_pos/vocab.txt.thres0");
+		//v.readDictionary("/data/onco_pos/vocab.txt.thres0.no_lower.no_smooth");
+		v.readDictionary("/data/onco_pos/vocab.txt.thres0.no_lower.no_smooth");
+		boolean lower = false;
 		boolean smooth = false; //smooth before checking the vocab
-		boolean includeNum = false; //this does not matter if smooth=false
-		String filename = "/data/onco_pos/new/test.rep.fhmm.triple.f5.c2";
+		
+		String filename = "/data/onco_pos/fhmm/test.rep.basic.new.f2";
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		String line;
 		int total = 0;
@@ -35,21 +36,20 @@ public class EvaluateAccuracy {
 				}
 				String gold = tokens[tokens.length - 2];
 				String pred = tokens[tokens.length - 1];
-				String word = tokens[0].toLowerCase();
+				String word = tokens[0];
+				if(lower) {
+					word = word.toLowerCase();
+				}
 				if(smooth) {
 					word = TokenProcessor.getSmoothedWord(word);
 				}
 				if(v.getIndex(word) == 0) {
 					//System.out.println(word);
 					unkTotal++;
-				} else if(includeNum && word.contains("<num>")) {
-					unkTotal++;
 				}
 				if(gold.equalsIgnoreCase(pred)) {
 					correct ++;
 					if(v.getIndex(word) == 0) {
-						unkCorrect++;
-					} else if(includeNum && word.contains("<num>")) {
 						unkCorrect++;
 					}
 				}
