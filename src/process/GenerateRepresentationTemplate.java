@@ -28,7 +28,7 @@ public class GenerateRepresentationTemplate {
 	//extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws FileNotFoundException {
 		int REP_LENGTH = 1;
-		String templateFile = "/data/onco_pos/representation.template";
+		String templateFile = "/data/onco_pos/brown/representation.template";
 		StringBuffer content = new StringBuffer();
 		int featureIndex = 0;
 		//smoothed word upto hasHyphen

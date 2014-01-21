@@ -13,13 +13,12 @@ import representation.BrownClusterRepresentation;
 public class ConvertToConllFormatUsingBrown {
 	//to extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws IOException {
-		String brownFilename = "brown-rcv1.clean.tokenized-CoNLL03.txt-c1000-freq1.txt";
+		String brownFilename = "/home/anjan/src/brown-cluster/wsj_biomed_all.notag.uniq-c1000-p1.out/paths";
 		BrownClusterRepresentation.createBrownClusterMap(brownFilename);
 		
 		Vocabulary v = new Vocabulary();
-		v.readDictionary("/data/onco_pos/clean/all/vocab.txt.thres0");
-		//String filename = "/data/onco_pos/clean/all/onco_test.561";
-		String filename = "/data/onco_pos/clean/all/train.40k";
+		v.readDictionary("/data/onco_pos/vocab.txt.thres0");
+		String filename = "/data/onco_pos/brown/onco_test.561";
 		String outFilename = filename + ".conll.brown";
 		
 		PrintWriter pw = new PrintWriter(outFilename);
@@ -35,7 +34,9 @@ public class ConvertToConllFormatUsingBrown {
 			//assert they are the same length
 			int length = words.length;
 			if(length != tags.length) {
-				throw new RuntimeException("Word and Tag length do not match");
+				pw.close();
+				br.close();
+				throw new RuntimeException("Word and Tag length do not match");				
 			}
 			//start extracting features and writing to the file
 			for(int i=0; i<length; i++) {
@@ -44,44 +45,81 @@ public class ConvertToConllFormatUsingBrown {
 				String tag = tags[i];
 				String smoothedWord = TokenProcessor.getSmoothedWord(word);
 				String lower = smoothedWord.toLowerCase();
-				//prefix
+				//prefix defaults
 				String[] prefix = new String[4];
 				for(int p=0; p<4; p++) {
 					prefix[p] = "_NA_";
 				}
-				prefix[0] = lower.substring(0, 1);
-				if(lower.length() > 1) {
-					prefix[1] = lower.substring(0,2);
-					if(lower.length() > 2) {
-						prefix[2] = lower.substring(0,3);
-						if(lower.length() > 3) {
-							prefix[3] = lower.substring(0,4);
-						}
-					}					
-				}
+				//suffix defaults
 				String[] suffix = new String[4];
 				for(int s=0; s<4; s++) {
 					suffix[s] = "_NA_";
 				}
-				suffix[0] = lower.substring(lower.length()-1, lower.length());
-				if(word.length() > 1) {
-					suffix[1] = lower.substring(lower.length()-2, lower.length());
-					if(word.length() > 2) {
-						suffix[2] = lower.substring(lower.length()-3, lower.length());
-						if(word.length() > 3) {
-							suffix[3] = lower.substring(lower.length()-4, lower.length());
+				
+				if(lower.equals("<num>")) {
+					for(int p=0; p<4; p++) {
+						suffix[p] = "<num>";
+						prefix[p] = "<num>";
+					}
+				}
+				else { 
+					if(! lower.startsWith("<num>")) {
+					prefix[0] = lower.substring(0, 1);
+					if(lower.length() > 1) {
+						prefix[0] = prefix[0] + "_"; //to indicate there is something after the prefix0
+						prefix[1] = lower.substring(0,2);
+						if(lower.length() > 2) {
+							prefix[1] = prefix[1] + "_";
+							prefix[2] = lower.substring(0,3);
+							if(lower.length() > 3) {
+								prefix[2] = prefix[2] + "_";
+								prefix[3] = lower.substring(0,4);
+								if(lower.length() > 4) {
+									prefix[3] = prefix[3] + "_";
+								}
+							}
+						}					
+					}
+					}
+					if(!lower.endsWith("<num>")) {
+						suffix[0] = lower.substring(lower.length()-1, lower.length());
+						if(lower.length() > 1) {
+							suffix[0] = "_" + suffix[0];
+							suffix[1] = lower.substring(lower.length()-2, lower.length());
+							if(lower.length() > 2) {
+								suffix[1] = "_" + suffix[1];
+								suffix[2] = lower.substring(lower.length()-3, lower.length());
+								if(lower.length() > 3) {
+									suffix[2] = "_" + suffix[2];
+									suffix[3] = lower.substring(lower.length()-4, lower.length());
+									if(lower.length() > 4) {
+										suffix[3] = "_" + suffix[3];
+									}
+								}
+							}
 						}
-					}					
+					}
 				}
 				String containsNumber = "N";
 				//contains number?
 				if(smoothedWord.contains("_NUM_") || smoothedWord.contains("<num>")) {
 					containsNumber = "Y";
 				}
+				/*
 				String containsUpper = "N"; //if not the beginning of the word
-				if(i != 0 && TokenProcessor.hasCaps(word)) {
+				//if(i != 0 && TokenProcessor.hasCaps(word)) {
+				if(TokenProcessor.hasCaps(word)) {
 					containsUpper = "Y";
 				}
+				*/
+				/*
+				String upper = TokenProcessor.getCapitalType(word);
+				*/
+				String upper = TokenProcessor.hasFirstCapFollowedByaToz(word) ? "Y" : "N";
+				if(i == 0) {
+					upper = upper + "0";
+				}		
+				
 				String containsHyphen = "N";
 				if(word.contains("-")) {
 					containsHyphen = "Y";
@@ -111,7 +149,7 @@ public class ConvertToConllFormatUsingBrown {
 						suffix[3] + spaces(5-suffix[3].length()) +
 						
 						containsNumber + " " +
-						containsUpper + " " +
+						upper + " " +
 						containsHyphen + " " +
 						brownRep + " " +
 						tag

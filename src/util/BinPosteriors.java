@@ -7,10 +7,10 @@ import java.io.PrintWriter;
 
 public class BinPosteriors {
 	public static void main(String[] args) throws IOException {
-		String inFile = "/home/anjan/workspace/HMM/out/decoded/wsj_biomed_dec18/onco_test.561.notag.decoded.posterior.binned";
+		String inFile = "/data/iclr/chunking/fhmm_3_10_new/preprocess/oanc_test.baseline.SPL.decoded.posterior";
 		int DIM = 50;// M * K
 		BufferedReader br = new BufferedReader(new FileReader(inFile));
-		PrintWriter pw = new PrintWriter(inFile + ".noword");
+		PrintWriter pw = new PrintWriter(inFile + ".binned");
 		String line;
 		while( (line = br.readLine()) != null) {
 			line = line.trim();
@@ -19,13 +19,13 @@ public class BinPosteriors {
 				continue;
 			}
 			StringBuffer sb = new StringBuffer();
-			String[] splitted = line.split("\\s+");
+			String[] splitted = line.split("\\|");
 			String word = splitted[0].trim();
 			//sb.append(word);
 			for(int i=1; i<splitted.length; i++) {
-				//double rep = Double.parseDouble(splitted[i]);
-				//String repBinned = String.format("%.1f", rep);
-				String repBinned = splitted[i];
+				double rep = Double.parseDouble(splitted[i]);
+				String repBinned = String.format("%.1f", rep);
+				//String repBinned = splitted[i];
 				sb.append(" " + repBinned);
 			}
 			pw.println(sb.toString());
