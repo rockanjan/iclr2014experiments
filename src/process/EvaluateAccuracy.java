@@ -10,12 +10,12 @@ public class EvaluateAccuracy {
 		Vocabulary v = new Vocabulary();
 		v.debug = false;
 		//v.readDictionary("/data/onco_pos/vocab.txt.thres0.no_lower.no_smooth");
-		v.readDictionary("/data/onco_pos/vocab.txt.thres0.no_lower.no_smooth");
+		v.readDictionary("/data/onco_pos/vocab.txt.thres2.no_lower.no_smooth");
 		boolean lower = false;
 		boolean smooth = false; //smooth before checking the vocab
 		
 		
-		String filename = "/data/onco_pos/fhmm/test.rep.basic.f2";
+		String filename = "/data/onco_pos/binned/test.rep.binned";
 		//String filename = "/data/onco_pos/hmm/test.rep.jahmm.f5.c1";
 		BufferedReader br = new BufferedReader(new FileReader(filename));
 		String line;

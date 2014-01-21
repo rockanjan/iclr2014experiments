@@ -27,8 +27,8 @@ public class GenerateRepresentationTemplateFHmm {
 	
 	//extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws FileNotFoundException {
-		int REP_LENGTH = 8;
-		String templateFile = "/data/onco_pos/fhmm/combined/representation.template.fhmm.basic";
+		int REP_LENGTH = 50;
+		String templateFile = "/data/onco_pos/binned/representation.template";
 		StringBuffer content = new StringBuffer();
 		int featureIndex = 0;
 		//smoothed word upto hasHyphen

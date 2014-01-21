@@ -15,8 +15,8 @@ import java.util.Map;
 
 public class Vocabulary {
 	public boolean debug = true;
-	public boolean smooth = true;
-	public boolean lower = true;
+	public boolean smooth = false;
+	public boolean lower = false;
 	public int vocabThreshold = 2;
 	//index zero reserved for *unk* (low freq features)
 	public int vocabReadIndex = 0;
@@ -31,10 +31,10 @@ public class Vocabulary {
 		boolean smooth = false;
 		boolean WPL = false; //word per line or sentence per line?
 		//read token per line
-		String folder = "/data/onco_pos/";
-		//String folder = "/home/anjan/workspace/HMM/data/pos_all/";
-		BufferedReader br = new BufferedReader(new FileReader(folder + "train.40k.notag"));
-		//BufferedReader br = new BufferedReader(new FileReader(folder + "pos.train.txt"));
+		//String folder = "/data/onco_pos/";
+		String folder = "/data/onco_pos/fhmm20new/";
+		//BufferedReader br = new BufferedReader(new FileReader(folder + "train.40k.notag"));
+		BufferedReader br = new BufferedReader(new FileReader(folder + "train.40k.fhmm.conll.subset.10000.SPL"));
 		String line = "";
 		Vocabulary v = new Vocabulary();
 		v.vocabReadIndex = 1;
@@ -65,7 +65,7 @@ public class Vocabulary {
 		System.out.println("Vocab size before reduction : " + v.vocabSize);
 		v.reduceVocab();
 		System.out.println("Vocab size after reduction : " + v.vocabSize);
-		v.writeDictionary(folder + "vocab.txt.thres" + v.vocabThreshold);
+		v.writeDictionary(folder + "vocab_subset10000.txt.thres" + v.vocabThreshold + ".no_lower.no_smooth");
 		br.close();
 	}
 	

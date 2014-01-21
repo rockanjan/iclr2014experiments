@@ -28,7 +28,7 @@ public class GenerateRepresentationTemplateFHmmCombined {
 	//extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws FileNotFoundException {
 		int REP_LENGTH = 3;
-		String templateFile = "/data/onco_pos/fhmm/3layers/representation.template.fhmm.combined.triple";
+		String templateFile = "/data/onco_pos/fhmm20/representation.template.fhmm.combined.pair";
 		StringBuffer content = new StringBuffer();
 		int featureIndex = 0;
 		//smoothed word upto hasHyphen
@@ -46,7 +46,7 @@ public class GenerateRepresentationTemplateFHmmCombined {
 		
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
 			//unigram of rep
-			for(int i=-1; i<=1; i++) {
+			for(int i=0; i<=0; i++) {
 				content.append(String.format("U%d:%%x[%d,%d]\n", featureIndex, i, (13+d)));
 				featureIndex++;
 			}
@@ -75,7 +75,7 @@ public class GenerateRepresentationTemplateFHmmCombined {
 		}
 		
 		int totalCombinedTriples = 0;
-		
+		/*
 		//representation combined (eg. n choose 3 for pairs)		
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
 			for(int e=0; e<REP_LENGTH; e++) {
@@ -90,7 +90,7 @@ public class GenerateRepresentationTemplateFHmmCombined {
 				}
 			}
 		}
-		
+		*/
 		
 		
 		//bigram
