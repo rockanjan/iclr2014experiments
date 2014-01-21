@@ -13,7 +13,7 @@ public class BrownClusterRepresentation {
 	public static Map<String, String> brownClusterWordToRepresentationSmoothed;
 
 	public static void main(String args[]) throws IOException {
-		String filename = "brown-rcv1.clean.tokenized-CoNLL03.txt-c1000-freq1.txt";
+		String filename = "/home/anjan/src/brown-cluster/wsj_biomed_all.notag.uniq-c1000-p1.out/paths";
 		createBrownClusterMap(filename);
 	}
 
@@ -27,9 +27,11 @@ public class BrownClusterRepresentation {
 			if (!line.isEmpty()) {
 				String splitted[] = line.split("(\\s+)|(\\t+)");
 				if (splitted.length < 2) {
+					br.close();
 					throw new RuntimeException(
 							"Error reading brown cluster representation on line : "
 									+ line);
+					
 				}
 				String rep = splitted[0];
 				String word = splitted[1];
@@ -37,6 +39,7 @@ public class BrownClusterRepresentation {
 				brownClusterWordToRepresentationSmoothed.put(TokenProcessor.getSmoothedWord(word), rep);
 			}
 		}
+		br.close();
 	}
 	
 	/*

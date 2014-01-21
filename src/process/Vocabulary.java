@@ -14,9 +14,9 @@ import java.util.Map;
  */
 
 public class Vocabulary {
-	public boolean debug = true;
-	public boolean smooth = true;
-	public boolean lower = true;
+	public static boolean debug = false;
+	public static boolean smooth = true;
+	public static boolean lower = true;
 	public int vocabThreshold = 2;
 	//index zero reserved for *unk* (low freq features)
 	public int vocabReadIndex = 0;
@@ -27,14 +27,11 @@ public class Vocabulary {
 	public Map<Integer, Integer> indexToFrequency = new HashMap<Integer, Integer>();
 	
 	public static void main(String[] args) throws IOException {
-		boolean lower = false;
-		boolean smooth = false;
 		boolean WPL = false; //word per line or sentence per line?
 		//read token per line
-		String folder = "/data/onco_pos/";
+		String folder = "/data/iclr/chunking/preprocess_files/";
 		//String folder = "/home/anjan/workspace/HMM/data/pos_all/";
-		BufferedReader br = new BufferedReader(new FileReader(folder + "train.40k.notag"));
-		//BufferedReader br = new BufferedReader(new FileReader(folder + "pos.train.txt"));
+		BufferedReader br = new BufferedReader(new FileReader(folder + "train.txt.SPL"));
 		String line = "";
 		Vocabulary v = new Vocabulary();
 		v.vocabReadIndex = 1;

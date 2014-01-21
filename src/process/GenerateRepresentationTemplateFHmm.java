@@ -27,8 +27,8 @@ public class GenerateRepresentationTemplateFHmm {
 	
 	//extract features as described by Ratnaparkhi
 	public static void main(String[] args) throws FileNotFoundException {
-		int REP_LENGTH = 8;
-		String templateFile = "/data/onco_pos/fhmm/combined/representation.template.fhmm.basic";
+		int REP_LENGTH = 1;
+		String templateFile = "/data/onco_pos/brown/representation.template.withcontext";
 		StringBuffer content = new StringBuffer();
 		int featureIndex = 0;
 		//smoothed word upto hasHyphen
@@ -51,8 +51,8 @@ public class GenerateRepresentationTemplateFHmm {
 		
 		for(int d=0; d<REP_LENGTH; d++) { //rep dimension
 			//unigram of rep
-			//for(int i=-1; i<=1; i++) {
-			for(int i=0; i<=0; i++) {
+			for(int i=-1; i<=1; i++) {
+			//for(int i=0; i<=0; i++) {
 				content.append(String.format("U%d:%%x[%d,%d]\n", featureIndex, i, (13+d)));
 				featureIndex++;
 			}
